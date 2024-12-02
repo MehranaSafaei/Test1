@@ -1,4 +1,4 @@
-package entity;
+package com.mehrana.test.entity;
 
 import java.util.Objects;
 
@@ -7,6 +7,15 @@ public class Personnel {
     private String userName;
     private String mobile;
     private Long PersonnelCode ;
+
+    public Personnel() {
+    }
+
+    public Personnel( String userName, String mobile, Long personnelCode) {
+        this.userName = userName;
+        this.mobile = mobile;
+        PersonnelCode = personnelCode;
+    }
 
     public Long getId() {
         return id;
