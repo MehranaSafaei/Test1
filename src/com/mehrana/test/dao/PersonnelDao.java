@@ -10,12 +10,12 @@ import java.util.Optional;
 
 public class PersonnelDao extends GenericDao<Personnel> {
 
-    private static final String INSERT = "INSERT INTO personnles (username, mobile, PersonnelCode) VALUES (?, ?, ?)";
-    private static final String SELECT_BY_ID = "SELECT * FROM personnles WHERE id = ?";
-    private static final String SELECT_ALL = "SELECT * FROM personnles";
+    private static final String INSERT = "insert into follows (follower_user_id, following_user_id, state) values (?,?,?)";
+    private static final String UPDATE = "update follows set follower_user_id = ?, following_user_id = ?, state = ? where id = ?";
+    private static final String DELETE = "delete from follows where id = ?";
+    private static final String SELECT_ALL = "select * from follows";
+    private static final String SELECT_BY_ID = "select * from follows where id = ?";
     private static final String SELECT_BY_USERNAME = "SELECT * FROM personnles WHERE username = ?";
-    private static final String UPDATE = "UPDATE personnles SET username = ?, mobile = ?, PersonnelCode = ? WHERE id = ?";
-    private static final String DELETE = "DELETE FROM personnles WHERE id = ?";
 
     public PersonnelDao() throws SQLException {
     }
@@ -39,25 +39,27 @@ public class PersonnelDao extends GenericDao<Personnel> {
         }
         return Optional.empty();
     }
-
     @Override
-    public List<Personnel> findById(Integer id) {
-        List<Personnel> personnelList = new ArrayList<>();
+    public Optional<Personnel> getById(long id) throws SQLException {
         try (Connection connection = SimpleConnectionPool.getConnection();
              PreparedStatement statement = connection.prepareStatement(SELECT_BY_ID)) {
-            statement.setInt(1, id);
-            try (ResultSet resultSet = statement.executeQuery()) {
-                while (resultSet.next()) {
-                    Personnel personnel = mapResultSetToPersonnel(resultSet);
-                    personnelList.add(personnel);
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return personnelList;
-    }
+            statement.setLong(1, id);
 
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                Personnel follow = new Personnel();
+                follow.setId(resultSet.getLong("id"));
+                follow.setUserName(resultSet.getString("username"));
+                follow.setMobile(resultSet.getString("follower_mobile"));
+                follow.setPersonnelCode(resultSet.getLong("personnel_code"));
+
+                return Optional.of(follow);
+            }
+
+            return Optional.empty();
+        }
+    }
     @Override
     public List<Personnel> findAll() {
         List<Personnel> personnelList = new ArrayList<>();
@@ -74,7 +76,6 @@ public class PersonnelDao extends GenericDao<Personnel> {
         }
         return personnelList;
     }
-
     @Override
     public List<Personnel> findByName(String username) {
         List<Personnel> personnelList = new ArrayList<>();
@@ -93,8 +94,6 @@ public class PersonnelDao extends GenericDao<Personnel> {
         }
         return personnelList; // Return the populated list
     }
-
-
     @Override
     public Personnel update(Personnel entity) {
         try (Connection connection = SimpleConnectionPool.getConnection();
@@ -114,7 +113,6 @@ public class PersonnelDao extends GenericDao<Personnel> {
         }
         return null;
     }
-
     @Override
     public void delete(Long id) {
         try (Connection connection = SimpleConnectionPool.getConnection();
@@ -126,7 +124,6 @@ public class PersonnelDao extends GenericDao<Personnel> {
             e.printStackTrace();
         }
     }
-
     // Helper method to map ResultSet to Personnel object
     private Personnel mapResultSetToPersonnel(ResultSet resultSet) throws SQLException {
         return new Personnel(

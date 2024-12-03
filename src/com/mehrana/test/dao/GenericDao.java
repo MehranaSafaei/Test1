@@ -1,6 +1,7 @@
 package com.mehrana.test.dao;
 
 import com.mehrana.test.connection.SimpleConnectionPool;
+import com.mehrana.test.entity.Personnel;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -22,7 +23,7 @@ public abstract class GenericDao<T> {
 
     public abstract Optional<T> insert(T entity) throws SQLException;
 
-    public abstract List<T> findById(Integer id);
+    public abstract Optional<Personnel> getById(long id) throws SQLException;
 
     public abstract List<T> findAll();
 

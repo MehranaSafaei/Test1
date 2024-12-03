@@ -92,4 +92,22 @@ public class Main {
         }
         return personnelList;
     }
+    public static Personnel update(Scanner sc) throws SQLException {
+        PersonnelService personnelService = new PersonnelService();
+        System.out.println("** Enter Information ** \n");
+        System.out.print("Enter your username: ");
+        String userName = sc.nextLine();
+        System.out.print("Enter your mobile number: ");
+        String mobile = sc.nextLine();
+        System.out.print("Enter your personnel code: ");
+        long personnelCode = sc.nextLong();
+        sc.nextLine();
+        Personnel personnel = new Personnel();
+        personnel.setId(personnel.getId());
+        personnel.setUserName(userName);
+        personnel.setMobile(mobile);
+        personnel.setPersonnelCode((long) personnelCode);
+        return personnelService.updatePersonnel(personnel);
+
+    }
 }
