@@ -20,4 +20,8 @@ public class PersonnelService {
     public List<Personnel> getListPersonnel() {
      return personnelDao.findAll();
     }
+
+    public Personnel updatePersonnel(Personnel personnel) {
+        return personnelDao.update(personnel);
+    }
 }
