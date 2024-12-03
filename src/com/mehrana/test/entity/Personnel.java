@@ -6,16 +6,18 @@ public class Personnel {
     private Long id;
     private String userName;
     private String mobile;
-    private Long PersonnelCode ;
+    private Long PersonnelCode;
 
     public Personnel() {
     }
 
-    public Personnel( String userName, String mobile, Long personnelCode) {
+    public Personnel(Long id, String userName, String mobile, Long personnelCode) {
+        this.id = id;
         this.userName = userName;
         this.mobile = mobile;
         PersonnelCode = personnelCode;
     }
+
 
     public Long getId() {
         return id;
