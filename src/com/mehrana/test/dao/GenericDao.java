@@ -23,7 +23,9 @@ public abstract class GenericDao<T> {
 
     public abstract Optional<T> insert(T entity) throws SQLException;
 
-    public abstract Optional<Personnel> getById(long id) throws SQLException;
+//    public abstract Optional<Personnel> getById(long id) throws SQLException;
+
+    public abstract Optional<Personnel> findById(long id);
 
     public abstract List<T> findAll();
 

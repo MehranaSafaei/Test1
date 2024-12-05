@@ -24,4 +24,16 @@ public class PersonnelService {
     public Personnel updatePersonnel(Personnel personnel) {
         return personnelDao.update(personnel);
     }
+
+    public Personnel findPersonnelByCode(long personnelCode) {
+        return personnelDao.findByPersonnelCode(personnelCode);
+    }
+
+    public Optional<Personnel> findById(long id) throws SQLException {
+        return personnelDao.findById(id);
+    }
+
+    public void deleteById(long id) {
+        personnelDao.delete(id);
+    }
 }

@@ -32,8 +32,10 @@ public class Main {
                         select();
                         break;
                     case 3:
+                        update(sc);
                         break;
                     case 4:
+                        delete(sc);
                         break;
                     case 5:
                         System.out.println("Goodbye!");
@@ -94,20 +96,53 @@ public class Main {
     }
     public static Personnel update(Scanner sc) throws SQLException {
         PersonnelService personnelService = new PersonnelService();
+        System.out.print("Enter your personnel code: ");
+        long personnelCode = sc.nextLong();
+        sc.nextLine();
+
+        Personnel existingPersonnel = personnelService.findPersonnelByCode(personnelCode);
+        if (existingPersonnel == null) {
+            System.out.println("Personnel not found!");
+            return null;
+        }
+
         System.out.println("** Enter Information ** \n");
         System.out.print("Enter your username: ");
         String userName = sc.nextLine();
         System.out.print("Enter your mobile number: ");
         String mobile = sc.nextLine();
-        System.out.print("Enter your personnel code: ");
-        long personnelCode = sc.nextLong();
-        sc.nextLine();
-        Personnel personnel = new Personnel();
-        personnel.setId(personnel.getId());
-        personnel.setUserName(userName);
-        personnel.setMobile(mobile);
-        personnel.setPersonnelCode((long) personnelCode);
-        return personnelService.updatePersonnel(personnel);
+        // Set new values
+        existingPersonnel.setUserName(userName);
+        existingPersonnel.setMobile(mobile);
 
+        //update
+        Personnel updatedPersonnel = personnelService.updatePersonnel(existingPersonnel);
+        if (updatedPersonnel != null) {
+            System.out.println("Personnel updated successfully: " + updatedPersonnel);
+        } else {
+            System.out.println("Failed to update personnel.");
+        }
+
+        return updatedPersonnel;
     }
+    public static void delete(Scanner sc) throws SQLException {
+        PersonnelService personnelService = new PersonnelService();
+        System.out.print("Enter your ID: ");
+        long id = sc.nextLong();
+        sc.nextLine(); // Consume newline left by nextLong()
+
+        // Find the Personnel by ID
+        Optional<Personnel> existingPersonnel = personnelService.findById(id);
+
+        if (existingPersonnel.isPresent()) {
+            // If Personnel exists, delete it
+            personnelService.deleteById(id);
+            System.out.println("Personnel with ID " + id + " has been deleted successfully.");
+        } else {
+            // If not found, display a message
+            System.out.println("Personnel not found with ID " + id + "!");
+        }
+    }
+
+
 }

@@ -10,12 +10,13 @@ import java.util.Optional;
 
 public class PersonnelDao extends GenericDao<Personnel> {
 
-    private static final String INSERT = "insert into follows (follower_user_id, following_user_id, state) values (?,?,?)";
-    private static final String UPDATE = "update follows set follower_user_id = ?, following_user_id = ?, state = ? where id = ?";
-    private static final String DELETE = "delete from follows where id = ?";
-    private static final String SELECT_ALL = "select * from follows";
-    private static final String SELECT_BY_ID = "select * from follows where id = ?";
-    private static final String SELECT_BY_USERNAME = "SELECT * FROM personnles WHERE username = ?";
+    private static final String INSERT = "INSERT INTO personnel (username, mobile, personnel_code) VALUES (?, ?, ?)";
+    private static final String UPDATE = "UPDATE personnel SET username = ?, mobile = ?, personnel_code = ? WHERE id = ?";
+    private static final String DELETE = "DELETE FROM personnel WHERE id = ?";
+    private static final String SELECT_ALL = "SELECT * FROM personnel";
+    private static final String SELECT_BY_ID = "SELECT * FROM personnel WHERE id = ?";
+    private static final String SELECT_BY_USERNAME = "SELECT * FROM personnel WHERE username = ?";
+    private static final String SELECT_BY_PERSONNEL_CODE =  "SELECT * FROM personnel WHERE personnel_code = ?";
 
     public PersonnelDao() throws SQLException {
     }
@@ -40,26 +41,24 @@ public class PersonnelDao extends GenericDao<Personnel> {
         return Optional.empty();
     }
     @Override
-    public Optional<Personnel> getById(long id) throws SQLException {
+    public Optional<Personnel> findById(long id) {
+        Personnel personnel = null;
         try (Connection connection = SimpleConnectionPool.getConnection();
              PreparedStatement statement = connection.prepareStatement(SELECT_BY_ID)) {
+
             statement.setLong(1, id);
-
-            ResultSet resultSet = statement.executeQuery();
-
-            if (resultSet.next()) {
-                Personnel follow = new Personnel();
-                follow.setId(resultSet.getLong("id"));
-                follow.setUserName(resultSet.getString("username"));
-                follow.setMobile(resultSet.getString("follower_mobile"));
-                follow.setPersonnelCode(resultSet.getLong("personnel_code"));
-
-                return Optional.of(follow);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    // Map the ResultSet to a Personnel object
+                    personnel = mapResultSetToPersonnel(resultSet);
+                }
             }
-
-            return Optional.empty();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+        return Optional.ofNullable(personnel); // Return an Optional
     }
+
     @Override
     public List<Personnel> findAll() {
         List<Personnel> personnelList = new ArrayList<>();
@@ -118,12 +117,36 @@ public class PersonnelDao extends GenericDao<Personnel> {
         try (Connection connection = SimpleConnectionPool.getConnection();
              PreparedStatement statement = connection.prepareStatement(DELETE)) {
 
-            statement.setLong(1, id);
-            statement.executeUpdate();
-        } catch (Exception e) {
+            statement.setLong(1, id); // Set the ID parameter
+            int rowsAffected = statement.executeUpdate(); // Execute the DELETE query
+
+            if (rowsAffected == 0) {
+                System.out.println("No rows were deleted. ID might not exist.");
+            }
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+
+
+    public Personnel findByPersonnelCode(long personnelCode) {
+        Personnel personnel = null;
+        try (Connection connection = SimpleConnectionPool.getConnection();
+             PreparedStatement statement = connection.prepareStatement(SELECT_BY_PERSONNEL_CODE)) {
+
+            statement.setLong(1, personnelCode);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    personnel = mapResultSetToPersonnel(resultSet);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Log the exception
+        }
+
+        return personnel; // Return the found Personnel object or null if not found
+    }
+
     // Helper method to map ResultSet to Personnel object
     private Personnel mapResultSetToPersonnel(ResultSet resultSet) throws SQLException {
         return new Personnel(
@@ -133,4 +156,6 @@ public class PersonnelDao extends GenericDao<Personnel> {
                 resultSet.getLong("PersonnelCode")
         );
     }
+
+
 }
