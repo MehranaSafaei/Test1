@@ -35,7 +35,7 @@ public class Main {
                         update(sc);
                         break;
                     case 4:
-                        delete(sc);
+                        remove(sc);
                         break;
                     case 5:
                         System.out.println("Goodbye!");
@@ -125,7 +125,7 @@ public class Main {
 
         return updatedPersonnel;
     }
-    public static void delete(Scanner sc) throws SQLException {
+    public static void remove (Scanner sc) throws SQLException {
         PersonnelService personnelService = new PersonnelService();
         System.out.print("Enter your ID: ");
         long id = sc.nextLong();
