@@ -8,6 +8,7 @@ public class Leave {
     private String description;
     private Date startDate;
     private Date endDate;
+    private Long personnelId;
 
     public int getId() {
         return id;
@@ -41,6 +42,14 @@ public class Leave {
         this.endDate = endDate;
     }
 
+    public Long getPersonnelId() {
+        return personnelId;
+    }
+
+    public void setPersonnelId(Long personnelId) {
+        this.personnelId = personnelId;
+    }
+
     @Override
     public String toString() {
         return "Leave{" +
@@ -48,6 +57,7 @@ public class Leave {
                 ", description='" + description + '\'' +
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +
+                ", personnelId=" + personnelId +
                 '}';
     }
 
@@ -56,11 +66,11 @@ public class Leave {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Leave leave = (Leave) o;
-        return id == leave.id && Objects.equals(description, leave.description) && Objects.equals(startDate, leave.startDate) && Objects.equals(endDate, leave.endDate);
+        return id == leave.id && Objects.equals(description, leave.description) && Objects.equals(startDate, leave.startDate) && Objects.equals(endDate, leave.endDate) && Objects.equals(personnelId, leave.personnelId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, description, startDate, endDate);
+        return Objects.hash(id, description, startDate, endDate, personnelId);
     }
 }
