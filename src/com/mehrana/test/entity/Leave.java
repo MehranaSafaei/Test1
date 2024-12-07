@@ -2,6 +2,7 @@ package com.mehrana.test.entity;
 
 import java.util.Date;
 import java.util.Objects;
+import java.util.logging.Logger;
 
 public class Leave {
     private int id;
@@ -9,6 +10,8 @@ public class Leave {
     private Date startDate;
     private Date endDate;
     private Long personnelId;
+
+    private Personnel personnel;
 
     public int getId() {
         return id;
@@ -27,7 +30,7 @@ public class Leave {
     }
 
     public Date getStartDate() {
-        return startDate;
+        return  startDate;
     }
 
     public void setStartDate(Date startDate) {
@@ -35,7 +38,7 @@ public class Leave {
     }
 
     public Date getEndDate() {
-        return endDate;
+        return  endDate;
     }
 
     public void setEndDate(Date endDate) {
@@ -46,8 +49,8 @@ public class Leave {
         return personnelId;
     }
 
-    public void setPersonnelId(Long personnelId) {
-        this.personnelId = personnelId;
+    public Long setPersonnelId(Long personnelId) {
+      return   this.personnelId = personnelId;
     }
 
     @Override

@@ -36,4 +36,8 @@ public class PersonnelService {
     public void deleteById(long id) {
         personnelDao.delete(id);
     }
+
+    public List<Personnel> findPersonnelByName(String name) {
+        return personnelDao.findByName(name);
+    }
 }

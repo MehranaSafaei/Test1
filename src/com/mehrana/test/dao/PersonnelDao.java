@@ -10,13 +10,13 @@ import java.util.Optional;
 
 public class PersonnelDao extends GenericDao<Personnel> {
 
-    private static final String INSERT = "INSERT INTO personnel (username, mobile, personnel_code) VALUES (?, ?, ?)";
-    private static final String UPDATE = "UPDATE personnel SET username = ?, mobile = ?, personnel_code = ? WHERE id = ?";
-    private static final String DELETE = "DELETE FROM personnel WHERE id = ?";
-    private static final String SELECT_ALL = "SELECT * FROM personnel";
-    private static final String SELECT_BY_ID = "SELECT * FROM personnel WHERE id = ?";
-    private static final String SELECT_BY_USERNAME = "SELECT * FROM personnel WHERE username = ?";
-    private static final String SELECT_BY_PERSONNEL_CODE =  "SELECT * FROM personnel WHERE personnel_code = ?";
+    private static final String INSERT = "INSERT INTO personnles (username, mobile, personnelCode) VALUES (?, ?, ?)";
+    private static final String UPDATE = "UPDATE personnles SET username = ?, mobile = ?, personnelCode = ? WHERE id = ?";
+    private static final String DELETE = "DELETE FROM personnles WHERE id = ?";
+    private static final String SELECT_ALL = "SELECT * FROM personnles";
+    private static final String SELECT_BY_ID = "SELECT * FROM personnles WHERE id = ?";
+    private static final String SELECT_BY_USERNAME = "SELECT * FROM personnles WHERE username = ?";
+    private static final String SELECT_BY_PERSONNEL_CODE =  "SELECT * FROM personnles WHERE personnelCode = ?";
 
     public PersonnelDao() throws SQLException {
     }

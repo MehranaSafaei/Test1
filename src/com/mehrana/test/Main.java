@@ -1,20 +1,19 @@
 package com.mehrana.test;
 
+import com.mehrana.test.entity.Leave;
 import com.mehrana.test.entity.Personnel;
+import com.mehrana.test.service.LeaveService;
 import com.mehrana.test.service.PersonnelService;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Scanner;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
-    public static void main(String[] args) throws SQLException {
-        //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-        // to see how IntelliJ IDEA suggests fixing it.
+
+    public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         boolean running = true;
 
@@ -22,52 +21,56 @@ public class Main {
         try {
             while (running) {
                 System.out.print("Please enter an option: ");
-                int choice = sc.nextInt();  // Get user input for menu selection
-                sc.nextLine();
+                int choice = sc.nextInt();
+                sc.nextLine(); // Consume newline left by nextInt()
+
                 switch (choice) {
                     case 1:
-                        insert(sc);
+                        insert(sc); //this method for adding information
                         break;
                     case 2:
-                        select();
+                        select(); //this method for selecting
                         break;
                     case 3:
-                        update(sc);
+                        update(sc); //this method for updating
                         break;
                     case 4:
-                        remove(sc);
+                        remove(sc); //this method fo removing
                         break;
                     case 5:
+                        searchByName(sc); // New method for searching by username
+                        break;
+                    case 6:
+                        insertLeave(sc);
+                    case 7:
                         System.out.println("Goodbye!");
                         sc.close();
-                        System.exit(0);
-
-                        default:
-                            System.out.println("Invalid option, please try again... ");
-                            break;
-
+                        running = false;
+                        break;
+                    default:
+                        System.out.println("Invalid option, please try again...");
+                        break;
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        /*System.out.printf("Hello and welcome!");
-
-        for (int i = 1; i <= 5; i++) {
-            //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-            // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-            System.out.println("i = " + i);
-        }*/
     }
 
     public static void menu() {
         System.out.println("*** Menu ***");
-        System.out.println("1) Add \n 2) Read \n 3) Update \n 4) Remove \n 5) Exit");
+        System.out.println("1) Add");
+        System.out.println("2) Read");
+        System.out.println("3) Update");
+        System.out.println("4) Remove");
+        System.out.println("5) Search by Name");
+        System.out.println("6)  insert Leave");
+        System.out.println("7) Exit");
     }
 
     public static Optional<Personnel> insert(Scanner sc) throws SQLException {
         PersonnelService personnelService = new PersonnelService();
-        System.out.println("** Enter Information ** \n");
+        System.out.println("** Enter Information **");
         System.out.print("Enter your username: ");
         String userName = sc.nextLine();
         System.out.print("Enter your mobile number: ");
@@ -77,23 +80,24 @@ public class Main {
         sc.nextLine();
 
         Personnel personnel = new Personnel();
-        personnel.setId(personnel.getId());
         personnel.setUserName(userName);
         personnel.setMobile(mobile);
         personnel.setPersonnelCode((long) personnelCode);
         System.out.println("Your information has been saved: " + userName + " - " + mobile + " - " + personnelCode);
         return personnelService.insert(personnel);
     }
+
     public static List<Personnel> select() throws SQLException {
         PersonnelService personnelService = new PersonnelService();
         List<Personnel> personnelList = personnelService.getListPersonnel();
-        System.out.println("    username |  mobile |  personnel code");
-        System.out.println("----------------------------------------");
+        System.out.println("    Username | Mobile | Personnel Code");
+        System.out.println("--------------------------------------");
         for (Personnel personnel : personnelList) {
-            System.out.println(STR." - \{personnel.getUserName().trim()}    - \{personnel.getMobile()} -\{personnel.getPersonnelCode()}");
+            System.out.println(personnel.getUserName().trim() + " - " + personnel.getMobile() + " - " + personnel.getPersonnelCode());
         }
         return personnelList;
     }
+
     public static Personnel update(Scanner sc) throws SQLException {
         PersonnelService personnelService = new PersonnelService();
         System.out.print("Enter your personnel code: ");
@@ -106,16 +110,14 @@ public class Main {
             return null;
         }
 
-        System.out.println("** Enter Information ** \n");
+        System.out.println("** Enter New Information **");
         System.out.print("Enter your username: ");
         String userName = sc.nextLine();
         System.out.print("Enter your mobile number: ");
         String mobile = sc.nextLine();
-        // Set new values
         existingPersonnel.setUserName(userName);
         existingPersonnel.setMobile(mobile);
 
-        //update
         Personnel updatedPersonnel = personnelService.updatePersonnel(existingPersonnel);
         if (updatedPersonnel != null) {
             System.out.println("Personnel updated successfully: " + updatedPersonnel);
@@ -125,24 +127,66 @@ public class Main {
 
         return updatedPersonnel;
     }
-    public static void remove (Scanner sc) throws SQLException {
+
+    public static void remove(Scanner sc) throws SQLException {
         PersonnelService personnelService = new PersonnelService();
         System.out.print("Enter your ID: ");
         long id = sc.nextLong();
-        sc.nextLine(); // Consume newline left by nextLong()
+        sc.nextLine();
 
-        // Find the Personnel by ID
         Optional<Personnel> existingPersonnel = personnelService.findById(id);
 
         if (existingPersonnel.isPresent()) {
-            // If Personnel exists, delete it
             personnelService.deleteById(id);
             System.out.println("Personnel with ID " + id + " has been deleted successfully.");
         } else {
-            // If not found, display a message
             System.out.println("Personnel not found with ID " + id + "!");
         }
     }
 
+    //  Search by Name
+    public static void searchByName(Scanner sc) throws SQLException {
+        PersonnelService personnelService = new PersonnelService();
+        System.out.print("Enter the username to search: ");
+        String name = sc.nextLine();
 
+        List<Personnel> results = personnelService.findPersonnelByName(name);
+        if (results.isEmpty()) {
+            System.out.println("No personnel found with the name: " + name);
+        } else {
+            System.out.println("    Username | Mobile | Personnel Code");
+            System.out.println("--------------------------------------");
+            for (Personnel personnel : results) {
+                System.out.println(personnel.getUserName().trim() + " - " + personnel.getMobile() + " - " + personnel.getPersonnelCode());
+            }
+        }
+    }
+
+    public static Optional<Leave> insertLeave(Scanner sc) throws SQLException, ParseException {
+        System.out.print("enter your personnelCode: ");
+        int personnelCode = sc.nextInt();
+
+        PersonnelService personnelService = new PersonnelService();
+        Personnel p = personnelService.findPersonnelByCode(personnelCode);
+        LeaveService leaveService = new LeaveService();
+        Scanner scanner = new Scanner(System.in);
+        DateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date today = Calendar.getInstance().getTime();
+        String todayAsString = simpleDateFormat.format(today);
+        System.out.println("Today's date: " + todayAsString);
+        System.out.print("Enter your starting date(\"YYYY-MM-DD\"): ");
+        String startDate = scanner.nextLine();
+        System.out.print("Enter your ending date(\"YYYY-MM-DD\"): ");
+        String endDate = scanner.nextLine();
+        System.out.println("Enter your description: ");
+        String description = scanner.nextLine();
+
+        Leave leave = new Leave();
+        leave.setStartDate(simpleDateFormat.parse(startDate));
+        leave.setEndDate(simpleDateFormat.parse(endDate));
+        leave.setDescription(description);
+        leave.setPersonnelId(leave.getPersonnelId());
+        return leaveService.insert(leave);
+
+    }
 }

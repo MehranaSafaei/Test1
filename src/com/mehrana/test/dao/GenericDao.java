@@ -1,6 +1,7 @@
 package com.mehrana.test.dao;
 
 import com.mehrana.test.connection.SimpleConnectionPool;
+import com.mehrana.test.entity.Leave;
 import com.mehrana.test.entity.Personnel;
 
 import java.sql.Connection;
@@ -34,4 +35,5 @@ public abstract class GenericDao<T> {
     public abstract T update(T entity);
 
     public abstract void delete(Long id);
+
 }
