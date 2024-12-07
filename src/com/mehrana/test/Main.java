@@ -42,6 +42,7 @@ public class Main {
                         break;
                     case 6:
                         insertLeave(sc);
+                        break;
                     case 7:
                         System.out.println("Goodbye!");
                         sc.close();
@@ -168,6 +169,12 @@ public class Main {
 
         PersonnelService personnelService = new PersonnelService();
         Personnel p = personnelService.findPersonnelByCode(personnelCode);
+
+        if (p == null) {
+            System.out.println("Personnel not found.");
+            return Optional.empty();
+        }
+
         LeaveService leaveService = new LeaveService();
         Scanner scanner = new Scanner(System.in);
         DateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -178,15 +185,17 @@ public class Main {
         String startDate = scanner.nextLine();
         System.out.print("Enter your ending date(\"YYYY-MM-DD\"): ");
         String endDate = scanner.nextLine();
-        System.out.println("Enter your description: ");
+        System.out.print("Enter your description: ");
         String description = scanner.nextLine();
 
         Leave leave = new Leave();
         leave.setStartDate(simpleDateFormat.parse(startDate));
         leave.setEndDate(simpleDateFormat.parse(endDate));
         leave.setDescription(description);
-        leave.setPersonnelId(leave.getPersonnelId());
-        return leaveService.insert(leave);
+        leave.setPersonnelId(p.getId()); //Setting the employee ID to leave
 
+        return leaveService.insert(leave);
     }
+
 }
+

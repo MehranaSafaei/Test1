@@ -15,8 +15,8 @@ import java.util.Optional;
 public class LeaveDao extends GenericDao<Leave> {
 
 
-    private String INSERT = "INSERT INTO Leave (startDate, endDate, description, personnelId) VALUES (?, ?, ?, ?)";
-    private String SELECT_BY_USERNAME = "SELECT * FROM Leave WHERE username = ?";
+    private String INSERT = "INSERT INTO Leaves (startDate, endDate, description, personelId) VALUES (?, ?, ?, ?)";
+    private String SELECT_BY_USERNAME = "SELECT * FROM Leaves WHERE username = ?";
 
     @Override
     public Optional<Leave> insert(Leave entity) throws SQLException {
@@ -30,7 +30,7 @@ public class LeaveDao extends GenericDao<Leave> {
             ps.setDate(1, new java.sql.Date(entity.getStartDate().getTime()));
             ps.setDate(2, new java.sql.Date(entity.getEndDate().getTime()));
             ps.setString(3, entity.getDescription());
-            ps.setLong(4, entity.setPersonnelId(entity.getPersonnelId()));
+            ps.setLong(4, entity.getPersonnelId()); // Set the employee ID value directly
 
             ps.executeUpdate();
 
@@ -42,7 +42,6 @@ public class LeaveDao extends GenericDao<Leave> {
         }
         return Optional.of(entity);
     }
-
 
 
     @Override
