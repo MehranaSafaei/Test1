@@ -8,48 +8,49 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class PersonnelDao extends GenericDao<Personnel> {
+public class PersonnelDao  {
 
-//    private static final String INSERT = "INSERT INTO personnles (username, mobile, personnelCode) VALUES (?, ?, ?)";
-//    private static final String UPDATE = "UPDATE personnles SET username = ?, mobile = ?, personnelCode = ? WHERE id = ?";
-//    private static final String DELETE = "DELETE FROM personnles WHERE id = ?";
-//    private static final String SELECT_ALL = "SELECT * FROM personnles";
-//    private static final String SELECT_BY_ID = "SELECT * FROM personnles WHERE id = ?";
-//    private static final String SELECT_BY_USERNAME = "SELECT * FROM personnles WHERE username = ?";
-//    private static final String SELECT_BY_PERSONNEL_CODE =  "SELECT * FROM personnles WHERE personnelCode = ?";
+    private static final String INSERT = "INSERT INTO personnels (username, mobile, personnelCode) VALUES (?, ?, ?)";
+    private static final String UPDATE = "UPDATE personnels SET username = ?, mobile = ?, personnelCode = ? WHERE id = ?";
+    private static final String DELETE = "DELETE FROM personnels WHERE id = ?";
+    private static final String SELECT_ALL = "SELECT * FROM personnels";
+    private static final String SELECT_BY_ID = "SELECT * FROM personnels WHERE id = ?";
+    private static final String SELECT_BY_USERNAME = "SELECT * FROM personnels WHERE username = ?";
+    private static final String SELECT_BY_PERSONNEL_CODE =  "SELECT * FROM personnels WHERE personnelCode = ?";
+//
+//    private static final String INSERT = "INSERT INTO personnel (username, mobile, personnelCode) VALUES (?, ?, ?)";
+//    private static final String UPDATE = "UPDATE personnel SET username = ?, mobile = ?, personnelCode = ? WHERE id = ?";
+//    private static final String DELETE = "DELETE FROM personnel WHERE id = ?";
+//    private static final String SELECT_ALL = "SELECT * FROM personnel";
+//    private static final String SELECT_BY_ID = "SELECT * FROM personnel WHERE id = ?";
+//    private static final String SELECT_BY_USERNAME = "SELECT * FROM personnel WHERE username = ?";
+//    private static final String SELECT_BY_PERSONNEL_CODE =  "SELECT * FROM personnel WHERE personnelCode = ?";
 
-    private static final String INSERT = "INSERT INTO personnel (username, mobile, personnelCode) VALUES (?, ?, ?)";
-    private static final String UPDATE = "UPDATE personnel SET username = ?, mobile = ?, personnelCode = ? WHERE id = ?";
-    private static final String DELETE = "DELETE FROM personnel WHERE id = ?";
-    private static final String SELECT_ALL = "SELECT * FROM personnel";
-    private static final String SELECT_BY_ID = "SELECT * FROM personnel WHERE id = ?";
-    private static final String SELECT_BY_USERNAME = "SELECT * FROM personnel WHERE username = ?";
-    private static final String SELECT_BY_PERSONNEL_CODE =  "SELECT * FROM personnel WHERE personnelCode = ?";
-
-    public PersonnelDao() throws SQLException {
-    }
-
-    @Override
-    public Optional<Personnel> insert(Personnel entity) throws SQLException {
-        try (Connection connection = SimpleConnectionPool.getConnection()) {
-            assert connection != null;
-            try (PreparedStatement statement = connection.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS)) {
-                statement.setString(1, entity.getUserName());
-                statement.setString(2, entity.getMobile());
-                statement.setLong(3, entity.getPersonnelCode());
-                statement.executeUpdate();
-
-                try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
-                    if (generatedKeys.next()) {
-                        entity.setId(generatedKeys.getLong(1));
-                    }
-                }
-            }
+    public PersonnelDao(){
+        try {
+            SimpleConnectionPool connectionPool = new SimpleConnectionPool(); // create connection pool
+        } catch (SQLException e) {
+            throw new ExceptionInInitializerError("Failed to initialize com.mehrana.test.connection pool: " + e.getMessage());
         }
-        return Optional.empty();
     }
-    @Override
-    public Optional<Personnel> findById(long id) {
+
+    public Optional<Personnel> insert(Personnel entity) throws SQLException {
+        try (Connection connection = SimpleConnectionPool.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(INSERT)) {
+            preparedStatement.setString(1, entity.getUserName());
+            preparedStatement.setString(2, entity.getMobile());
+            preparedStatement.setLong(3, entity.getPersonnelCode());
+            preparedStatement.executeUpdate();
+            ResultSet rs = preparedStatement.getGeneratedKeys();
+            while (rs.next()) {
+                entity.setId(rs.getLong(1));
+
+            }
+            return Optional.of(entity);
+        }
+    }
+
+    public Optional<Personnel> getById(long id) {
         Personnel personnel = null;
         try (Connection connection = SimpleConnectionPool.getConnection();
              PreparedStatement statement = connection.prepareStatement(SELECT_BY_ID)) {
@@ -67,13 +68,12 @@ public class PersonnelDao extends GenericDao<Personnel> {
         return Optional.ofNullable(personnel); // Return an Optional
     }
 
-    @Override
-    public List<Personnel> findAll() {
+    public List<Personnel> getAll() {
         List<Personnel> personnelList = new ArrayList<>();
         try (Connection connection = SimpleConnectionPool.getConnection();
              PreparedStatement statement = connection.prepareStatement(SELECT_ALL);
-             ResultSet resultSet = statement.executeQuery()) {
-
+             ) {
+            ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 Personnel personnel = mapResultSetToPersonnel(resultSet);
                 personnelList.add(personnel);
@@ -83,8 +83,8 @@ public class PersonnelDao extends GenericDao<Personnel> {
         }
         return personnelList;
     }
-    @Override
-    public List<Personnel> findByName(String username) {
+
+    public List<Personnel> getByName(String username) {
         List<Personnel> personnelList = new ArrayList<>();
         try (Connection connection = SimpleConnectionPool.getConnection();
              PreparedStatement statement = connection.prepareStatement(SELECT_BY_USERNAME)) {
@@ -101,7 +101,7 @@ public class PersonnelDao extends GenericDao<Personnel> {
         }
         return personnelList; // Return the populated list
     }
-    @Override
+
     public Personnel update(Personnel entity) {
         try (Connection connection = SimpleConnectionPool.getConnection();
              PreparedStatement statement = connection.prepareStatement(UPDATE)) {
@@ -120,7 +120,8 @@ public class PersonnelDao extends GenericDao<Personnel> {
         }
         return null;
     }
-    @Override
+
+
     public void delete(Long id) {
         try (Connection connection = SimpleConnectionPool.getConnection();
              PreparedStatement statement = connection.prepareStatement(DELETE)) {

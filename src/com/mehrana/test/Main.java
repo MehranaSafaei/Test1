@@ -188,12 +188,13 @@ public class Main {
         System.out.print("Enter your description: ");
         String description = scanner.nextLine();
 
+
         Leave leave = new Leave();
         leave.setStartDate(simpleDateFormat.parse(startDate));
         leave.setEndDate(simpleDateFormat.parse(endDate));
         leave.setDescription(description);
         leave.setPersonnelId(p.getId()); //Setting the employee ID to leave
-
+        System.out.println("Your information has been saved: " + startDate + " - " + endDate + " - " + description );
         return leaveService.insert(leave);
     }
 

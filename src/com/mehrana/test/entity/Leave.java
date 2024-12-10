@@ -2,7 +2,6 @@ package com.mehrana.test.entity;
 
 import java.util.Date;
 import java.util.Objects;
-import java.util.logging.Logger;
 
 public class Leave {
     private int id;
@@ -12,6 +11,7 @@ public class Leave {
     private Long personnelId;
 
     private Personnel personnel;
+
 
     public int getId() {
         return id;
