@@ -19,5 +19,12 @@ public class LeaveService {
         return leaveDao.insert(entity);
     }
 
+    public Optional<Object> update(Optional<Leave> entity) throws SQLException {
+        return leaveDao.update(entity);
+    }
 
+
+    public Optional<Leave> findLeaveByPersonnelId(Long id) throws SQLException {
+        return leaveDao.findLeaveByPersonnelCode(id);
+    }
 }

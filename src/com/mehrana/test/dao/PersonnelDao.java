@@ -127,11 +127,7 @@ public class PersonnelDao  {
              PreparedStatement statement = connection.prepareStatement(DELETE)) {
 
             statement.setLong(1, id); // Set the ID parameter
-            int rowsAffected = statement.executeUpdate(); // Execute the DELETE query
 
-            if (rowsAffected == 0) {
-                System.out.println("No rows were deleted. ID might not exist.");
-            }
         } catch (SQLException e) {
             e.printStackTrace();
         }

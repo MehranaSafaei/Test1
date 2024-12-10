@@ -21,9 +21,12 @@ public class LeaveDao {
 //    private static final String SELECT_BY_ID = "SELECT * FROM Leaves WHERE id = ?";
 
     private String INSERT = "INSERT INTO Leave (startDate, endDate, description, personnelId) VALUES (?::date, ?::date, ?, ?)";
+    private static final String UPDATE = "UPDATE leave SET startDate = ?, endDate = ?, description = ? WHERE id = ?";
     private String SELECT_BY_USERNAME = "SELECT * FROM Leave WHERE username = ?";
     private static final String SELECT_ALL = "SELECT * FROM Leave";
     private static final String SELECT_BY_ID = "SELECT * FROM Leave WHERE id = ?";
+    private static final String SELECT_BY_PERSONNEL_ID = "SELECT * FROM leave WHERE personnelId = ?";
+
 
     public LeaveDao() throws SQLException {
         try {
@@ -103,8 +106,18 @@ public class LeaveDao {
         return List.of();
     }
 
-    public Leave update(Leave entity) {
-        return null;
+    public Optional<Object> update(Optional<Leave> entity) throws SQLException {
+        try(Connection connection = SimpleConnectionPool.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement(UPDATE)){
+            preparedStatement.setString(1, entity.get().getDescription());
+            preparedStatement.setDate(2, new java.sql.Date(entity.get().getStartDate().getTime()));
+            preparedStatement.setDate(3, new java.sql.Date(entity.get().getEndDate().getTime()));
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                return Optional.of(entity);
+            }
+        }
+        return Optional.empty();
     }
 
     public void delete(Long id) {
@@ -131,4 +144,32 @@ public class LeaveDao {
     }
 
 
-}
+        public Optional<Leave> findLeaveByPersonnelCode(Long personnelCode) throws SQLException {
+            Leave leave = null;
+
+            try (Connection connection = SimpleConnectionPool.getConnection();
+                 PreparedStatement statement = connection.prepareStatement(SELECT_BY_PERSONNEL_ID)) {
+
+                statement.setLong(1, personnelCode);
+
+                ResultSet resultSet = statement.executeQuery();
+                    if (resultSet.next()) {
+
+                        leave = new Leave();
+                        leave.setId((int) resultSet.getLong("id"));
+                        leave.setPersonnelId(resultSet.getLong("personnelId"));
+                        leave.setDescription(resultSet.getString("description"));
+                        leave.setStartDate(resultSet.getDate("startDate"));
+                        leave.setEndDate(resultSet.getDate("endDate"));
+                    }
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+                throw new SQLException("Error fetching leave information for personnelId: " + personnelCode, e);
+            }
+
+            return Optional.of(leave);
+        }
+
+    }
+

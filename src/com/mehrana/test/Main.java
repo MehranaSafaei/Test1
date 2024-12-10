@@ -17,6 +17,14 @@ public class Main {
         Scanner sc = new Scanner(System.in);
         boolean running = true;
 
+//        String x = "hey";
+//        x = "hoy";
+//        System.out.println(x);
+
+        String[] str = new String[]{"mehrana", "mehraneh"};
+        for (int i = 0; i < str.length; i++) {
+            System.out.println(str[i]);
+        }
         menu();
         try {
             while (running) {
@@ -44,6 +52,9 @@ public class Main {
                         insertLeave(sc);
                         break;
                     case 7:
+                        updateLeave(sc);
+                        break;
+                    case 8:
                         System.out.println("Goodbye!");
                         sc.close();
                         running = false;
@@ -66,7 +77,8 @@ public class Main {
         System.out.println("4) Remove");
         System.out.println("5) Search by Name");
         System.out.println("6)  insert Leave");
-        System.out.println("7) Exit");
+        System.out.println("7) update Leave");
+        System.out.println("8) Exit");
     }
 
     public static Optional<Personnel> insert(Scanner sc) throws SQLException {
@@ -194,9 +206,59 @@ public class Main {
         leave.setEndDate(simpleDateFormat.parse(endDate));
         leave.setDescription(description);
         leave.setPersonnelId(p.getId()); //Setting the employee ID to leave
-        System.out.println("Your information has been saved: " + startDate + " - " + endDate + " - " + description );
+        System.out.println("Your information has been saved: " + startDate + " - " + endDate + " - " + description);
         return leaveService.insert(leave);
     }
+
+
+    public static Leave updateLeave(Scanner sc) throws SQLException, ParseException {
+   /*     LeaveService leaveService = new LeaveService();
+        PersonnelService personnelService = new PersonnelService();
+
+        System.out.print("Enter your personnel code: ");
+        long personnelCode = sc.nextLong();
+        sc.nextLine();
+
+        Personnel personnel = personnelService.findPersonnelByCode(personnelCode);
+        if (personnel == null) {
+            System.out.println("Personnel not found!");
+            return null;
+        }
+
+        Optional<Leave> existingLeave = leaveService.findLeaveByPersonnelId(personnel.getPersonnelCode());
+        if (existingLeave == null) {
+            System.out.println("No leave record found for this personnel.");
+            return Optional.empty();
+        }
+
+        System.out.println("** Enter New Leave Information **");
+        System.out.print("Enter new description: ");
+        String description = sc.nextLine();
+        System.out.print("Enter new leave start date (yyyy-MM-dd): ");
+        String startDateStr = sc.nextLine();
+        System.out.print("Enter new leave end date (yyyy-MM-dd): ");
+        String endDateStr = sc.nextLine();
+
+        Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse(startDateStr);
+        Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(endDateStr);
+
+        existingLeave.get().setDescription(description);
+        existingLeave.get().setStartDate(startDate);
+        existingLeave.get().setEndDate(endDate);
+
+        Optional<Object> updatedLeave = leaveService.update(existingLeave);
+        if (updatedLeave == null) {
+            System.out.println("Leave updated successfully: " + updatedLeave);
+        } else {
+            System.out.println("Failed to update leave.");
+        }
+
+        return Optional.of(updatedLeave);*/
+        System.out.print("Enter your ID: ");
+
+        return null;
+    }
+
 
 }
 
