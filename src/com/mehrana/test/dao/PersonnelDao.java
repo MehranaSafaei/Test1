@@ -8,15 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class PersonnelDao extends GenericDao<Personnel> {
-
-//    private static final String INSERT = "INSERT INTO personnles (username, mobile, personnelCode) VALUES (?, ?, ?)";
-//    private static final String UPDATE = "UPDATE personnles SET username = ?, mobile = ?, personnelCode = ? WHERE id = ?";
-//    private static final String DELETE = "DELETE FROM personnles WHERE id = ?";
-//    private static final String SELECT_ALL = "SELECT * FROM personnles";
-//    private static final String SELECT_BY_ID = "SELECT * FROM personnles WHERE id = ?";
-//    private static final String SELECT_BY_USERNAME = "SELECT * FROM personnles WHERE username = ?";
-//    private static final String SELECT_BY_PERSONNEL_CODE =  "SELECT * FROM personnles WHERE personnelCode = ?";
+public class PersonnelDao {
 
     private static final String INSERT = "INSERT INTO personnel (username, mobile, personnelCode) VALUES (?, ?, ?)";
     private static final String UPDATE = "UPDATE personnel SET username = ?, mobile = ?, personnelCode = ? WHERE id = ?";
@@ -26,10 +18,15 @@ public class PersonnelDao extends GenericDao<Personnel> {
     private static final String SELECT_BY_USERNAME = "SELECT * FROM personnel WHERE username = ?";
     private static final String SELECT_BY_PERSONNEL_CODE =  "SELECT * FROM personnel WHERE personnelCode = ?";
 
-    public PersonnelDao() throws SQLException {
+    public PersonnelDao(){
+        try {
+            SimpleConnectionPool connectionPool = new SimpleConnectionPool(); // create connection pool
+        } catch (SQLException e) {
+            throw new ExceptionInInitializerError("Failed to initialize com.mehrana.test.connection pool: " + e.getMessage());
+        }
     }
 
-    @Override
+
     public Optional<Personnel> insert(Personnel entity) throws SQLException {
         try (Connection connection = SimpleConnectionPool.getConnection()) {
             assert connection != null;
@@ -46,9 +43,9 @@ public class PersonnelDao extends GenericDao<Personnel> {
                 }
             }
         }
-        return Optional.empty();
+        return Optional.of(entity);
     }
-    @Override
+
     public Optional<Personnel> findById(long id) {
         Personnel personnel = null;
         try (Connection connection = SimpleConnectionPool.getConnection();
@@ -57,17 +54,15 @@ public class PersonnelDao extends GenericDao<Personnel> {
             statement.setLong(1, id);
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
-                    // Map the ResultSet to a Personnel object
                     personnel = mapResultSetToPersonnel(resultSet);
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return Optional.ofNullable(personnel); // Return an Optional
+        return Optional.ofNullable(personnel);
     }
 
-    @Override
     public List<Personnel> findAll() {
         List<Personnel> personnelList = new ArrayList<>();
         try (Connection connection = SimpleConnectionPool.getConnection();
@@ -83,7 +78,7 @@ public class PersonnelDao extends GenericDao<Personnel> {
         }
         return personnelList;
     }
-    @Override
+
     public List<Personnel> findByName(String username) {
         List<Personnel> personnelList = new ArrayList<>();
         try (Connection connection = SimpleConnectionPool.getConnection();
@@ -91,17 +86,16 @@ public class PersonnelDao extends GenericDao<Personnel> {
             statement.setString(1, username); // Parameterize the query
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
-                    // Map each row of the ResultSet to a Personnel object
                     Personnel personnel = mapResultSetToPersonnel(resultSet);
                     personnelList.add(personnel);
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace(); // Log the exception
+            e.printStackTrace();
         }
-        return personnelList; // Return the populated list
+        return personnelList;
     }
-    @Override
+
     public Personnel update(Personnel entity) {
         try (Connection connection = SimpleConnectionPool.getConnection();
              PreparedStatement statement = connection.prepareStatement(UPDATE)) {
@@ -115,18 +109,18 @@ public class PersonnelDao extends GenericDao<Personnel> {
             if (affectedRows > 0) {
                 return entity;
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return null;
     }
-    @Override
+
     public void delete(Long id) {
         try (Connection connection = SimpleConnectionPool.getConnection();
              PreparedStatement statement = connection.prepareStatement(DELETE)) {
 
-            statement.setLong(1, id); // Set the ID parameter
-            int rowsAffected = statement.executeUpdate(); // Execute the DELETE query
+            statement.setLong(1, id);
+            int rowsAffected = statement.executeUpdate();
 
             if (rowsAffected == 0) {
                 System.out.println("No rows were deleted. ID might not exist.");
@@ -135,7 +129,6 @@ public class PersonnelDao extends GenericDao<Personnel> {
             e.printStackTrace();
         }
     }
-
 
     public Personnel findByPersonnelCode(long personnelCode) {
         Personnel personnel = null;
@@ -149,13 +142,11 @@ public class PersonnelDao extends GenericDao<Personnel> {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace(); // Log the exception
+            e.printStackTrace();
         }
-
-        return personnel; // Return the found Personnel object or null if not found
+        return personnel;
     }
 
-    // Helper method to map ResultSet to Personnel object
     private Personnel mapResultSetToPersonnel(ResultSet resultSet) throws SQLException {
         return new Personnel(
                 resultSet.getLong("id"),
@@ -164,6 +155,4 @@ public class PersonnelDao extends GenericDao<Personnel> {
                 resultSet.getLong("PersonnelCode")
         );
     }
-
-
 }

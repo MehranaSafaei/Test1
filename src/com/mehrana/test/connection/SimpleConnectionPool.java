@@ -9,15 +9,15 @@ import java.util.List;
 public class SimpleConnectionPool {
 
 //        private final String URL = "jdbc:postgresql://localhost:5432/postgres"; // URL DB
-    private final String URL = "jdbc:mysql://localhost:3306/mydb";
+    private static final String URL = "jdbc:mysql://localhost:3306/mydb";
 //    private final String USER = "postgres"; // user DB
-    private final String USER = "root"; // user DB
+    private static final String USER = "root"; // user DB
 //    private final String PASSWORD = "1234"; // password DB
-    private final String PASSWORD = "Aa@123456"; // password DB
+    private static final String PASSWORD = "Aa@123456"; // password DB
 
     private static final List<Connection> availableConnections = new ArrayList<>();
     private static final List<Connection> usedConnections = new ArrayList<>();
-    private final int INITIAL_POOL_SIZE = 5;
+    private static final int INITIAL_POOL_SIZE = 5;
 
     public SimpleConnectionPool() throws SQLException {
         for (int i = 0; i < INITIAL_POOL_SIZE; i++) {
