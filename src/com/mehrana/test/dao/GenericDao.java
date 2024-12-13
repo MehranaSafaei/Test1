@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* package com.mehrana.test.dao;
+=======
+ /* package com.mehrana.test.dao;
+>>>>>>> 33eb8d3f7046fe029b62c1cb1efdadb817d245ab
 
 import com.mehrana.test.connection.SimpleConnectionPool;
 
@@ -23,12 +27,24 @@ public abstract class GenericDao<T> {
 
 //    public abstract Optional<Personnel> getById(long id) throws SQLException;
 
+<<<<<<< HEAD
    public abstract Optional<T> getById(long id);
 
    public abstract List<T> getAll();
 
    public abstract T update(T entity);
+=======
+    public abstract Optional<T> getById(long id);
+
+    public abstract List<T> getAll();
+>>>>>>> 33eb8d3f7046fe029b62c1cb1efdadb817d245ab
 
    public abstract void delete(Long id);
 
+<<<<<<< HEAD
 }*/
+=======
+    public abstract void delete(Long id);
+
+}*/
+>>>>>>> 33eb8d3f7046fe029b62c1cb1efdadb817d245ab

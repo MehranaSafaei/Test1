@@ -18,7 +18,7 @@ public class PersonnelService {
    }
 
     public List<Personnel> getListPersonnel() {
-     return personnelDao.findAll();
+     return personnelDao.getAll();
     }
 
     public Personnel updatePersonnel(Personnel personnel) {
@@ -30,7 +30,7 @@ public class PersonnelService {
     }
 
     public Optional<Personnel> findById(long id) throws SQLException {
-        return personnelDao.findById(id);
+        return personnelDao.getById(id);
     }
 
     public void deleteById(long id) {
@@ -38,6 +38,6 @@ public class PersonnelService {
     }
 
     public List<Personnel> findPersonnelByName(String name) {
-        return personnelDao.findByName(name);
+        return personnelDao.getByName(name);
     }
 }

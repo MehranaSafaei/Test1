@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+<<<<<<< HEAD
 public class PersonnelDao {
 
     private static final String INSERT = "INSERT INTO personnel (username, mobile, personnelCode) VALUES (?, ?, ?)";
@@ -18,11 +19,32 @@ public class PersonnelDao {
     private static final String SELECT_BY_USERNAME = "SELECT * FROM personnel WHERE username = ?";
     private static final String SELECT_BY_PERSONNEL_CODE =  "SELECT * FROM personnel WHERE personnelCode = ?";
 
+=======
+public class PersonnelDao  {
+
+    private static final String INSERT = "INSERT INTO personnels (username, mobile, personnelCode) VALUES (?, ?, ?)";
+    private static final String UPDATE = "UPDATE personnels SET username = ?, mobile = ?, personnelCode = ? WHERE id = ?";
+    private static final String DELETE = "DELETE FROM personnels WHERE id = ?";
+    private static final String SELECT_ALL = "SELECT * FROM personnels";
+    private static final String SELECT_BY_ID = "SELECT * FROM personnels WHERE id = ?";
+    private static final String SELECT_BY_USERNAME = "SELECT * FROM personnels WHERE username = ?";
+    private static final String SELECT_BY_PERSONNEL_CODE =  "SELECT * FROM personnels WHERE personnelCode = ?";
+//
+//    private static final String INSERT = "INSERT INTO personnel (username, mobile, personnelCode) VALUES (?, ?, ?)";
+//    private static final String UPDATE = "UPDATE personnel SET username = ?, mobile = ?, personnelCode = ? WHERE id = ?";
+//    private static final String DELETE = "DELETE FROM personnel WHERE id = ?";
+//    private static final String SELECT_ALL = "SELECT * FROM personnel";
+//    private static final String SELECT_BY_ID = "SELECT * FROM personnel WHERE id = ?";
+//    private static final String SELECT_BY_USERNAME = "SELECT * FROM personnel WHERE username = ?";
+//    private static final String SELECT_BY_PERSONNEL_CODE =  "SELECT * FROM personnel WHERE personnelCode = ?";
+
+>>>>>>> 33eb8d3f7046fe029b62c1cb1efdadb817d245ab
     public PersonnelDao(){
         try {
             SimpleConnectionPool connectionPool = new SimpleConnectionPool(); // create connection pool
         } catch (SQLException e) {
             throw new ExceptionInInitializerError("Failed to initialize com.mehrana.test.connection pool: " + e.getMessage());
+<<<<<<< HEAD
         }
     }
 
@@ -47,6 +69,28 @@ public class PersonnelDao {
     }
 
     public Optional<Personnel> findById(long id) {
+=======
+        }
+    }
+
+    public Optional<Personnel> insert(Personnel entity) throws SQLException {
+        try (Connection connection = SimpleConnectionPool.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(INSERT)) {
+            preparedStatement.setString(1, entity.getUserName());
+            preparedStatement.setString(2, entity.getMobile());
+            preparedStatement.setLong(3, entity.getPersonnelCode());
+            preparedStatement.executeUpdate();
+            ResultSet rs = preparedStatement.getGeneratedKeys();
+            while (rs.next()) {
+                entity.setId(rs.getLong(1));
+
+            }
+            return Optional.of(entity);
+        }
+    }
+
+    public Optional<Personnel> getById(long id) {
+>>>>>>> 33eb8d3f7046fe029b62c1cb1efdadb817d245ab
         Personnel personnel = null;
         try (Connection connection = SimpleConnectionPool.getConnection();
              PreparedStatement statement = connection.prepareStatement(SELECT_BY_ID)) {
@@ -63,12 +107,16 @@ public class PersonnelDao {
         return Optional.ofNullable(personnel);
     }
 
+<<<<<<< HEAD
     public List<Personnel> findAll() {
+=======
+    public List<Personnel> getAll() {
+>>>>>>> 33eb8d3f7046fe029b62c1cb1efdadb817d245ab
         List<Personnel> personnelList = new ArrayList<>();
         try (Connection connection = SimpleConnectionPool.getConnection();
              PreparedStatement statement = connection.prepareStatement(SELECT_ALL);
-             ResultSet resultSet = statement.executeQuery()) {
-
+             ) {
+            ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 Personnel personnel = mapResultSetToPersonnel(resultSet);
                 personnelList.add(personnel);
@@ -79,7 +127,11 @@ public class PersonnelDao {
         return personnelList;
     }
 
+<<<<<<< HEAD
     public List<Personnel> findByName(String username) {
+=======
+    public List<Personnel> getByName(String username) {
+>>>>>>> 33eb8d3f7046fe029b62c1cb1efdadb817d245ab
         List<Personnel> personnelList = new ArrayList<>();
         try (Connection connection = SimpleConnectionPool.getConnection();
              PreparedStatement statement = connection.prepareStatement(SELECT_BY_USERNAME)) {
@@ -115,16 +167,21 @@ public class PersonnelDao {
         return null;
     }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 33eb8d3f7046fe029b62c1cb1efdadb817d245ab
     public void delete(Long id) {
         try (Connection connection = SimpleConnectionPool.getConnection();
              PreparedStatement statement = connection.prepareStatement(DELETE)) {
 
+<<<<<<< HEAD
             statement.setLong(1, id);
             int rowsAffected = statement.executeUpdate();
+=======
+            statement.setLong(1, id); // Set the ID parameter
+>>>>>>> 33eb8d3f7046fe029b62c1cb1efdadb817d245ab
 
-            if (rowsAffected == 0) {
-                System.out.println("No rows were deleted. ID might not exist.");
-            }
         } catch (SQLException e) {
             e.printStackTrace();
         }

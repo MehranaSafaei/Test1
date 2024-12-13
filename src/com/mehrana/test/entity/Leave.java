@@ -12,7 +12,14 @@ public class Leave {
     private Long personnelId;
     private LocalDateTime loginTime;  // اضافه کردن فیلد زمان ورود به سیستم
 
+<<<<<<< HEAD
     public long getId() {
+=======
+    private Personnel personnel;
+
+
+    public int getId() {
+>>>>>>> 33eb8d3f7046fe029b62c1cb1efdadb817d245ab
         return id;
     }
 

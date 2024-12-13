@@ -467,8 +467,12 @@ public class Main {
 
 
     public static Leave updateLeave(Scanner sc) throws SQLException, ParseException {
+<<<<<<< HEAD
    */
 /*     LeaveService leaveService = new LeaveService();
+=======
+   /*     LeaveService leaveService = new LeaveService();
+>>>>>>> 33eb8d3f7046fe029b62c1cb1efdadb817d245ab
         PersonnelService personnelService = new PersonnelService();
 
         System.out.print("Enter your personnel code: ");
@@ -509,8 +513,12 @@ public class Main {
             System.out.println("Failed to update leave.");
         }
 
+<<<<<<< HEAD
         return Optional.of(updatedLeave);*//*
 
+=======
+        return Optional.of(updatedLeave);*/
+>>>>>>> 33eb8d3f7046fe029b62c1cb1efdadb817d245ab
         System.out.print("Enter your ID: ");
 
 
@@ -518,9 +526,12 @@ public class Main {
 
 
 }
+<<<<<<< HEAD
 */
 
 
 
 
+=======
+>>>>>>> 33eb8d3f7046fe029b62c1cb1efdadb817d245ab
 

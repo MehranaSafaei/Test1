@@ -8,12 +8,21 @@ import java.util.List;
 
 public class SimpleConnectionPool {
 
+<<<<<<< HEAD
 //        private final String URL = "jdbc:postgresql://localhost:5432/postgres"; // URL DB
     private static final String URL = "jdbc:mysql://localhost:3306/mydb";
 //    private final String USER = "postgres"; // user DB
     private static final String USER = "root"; // user DB
 //    private final String PASSWORD = "1234"; // password DB
     private static final String PASSWORD = "Aa@123456"; // password DB
+=======
+        private final String URL = "jdbc:postgresql://localhost:5432/postgres"; // URL postgres DB
+//    private final String URL = "jdbc:mysql://localhost:3306/mydb"; //URL MySQL DB
+    private final String USER = "postgres"; // user postgres DB
+//    private final String USER = "root"; // user MySQL DB
+    private final String PASSWORD = "1234"; // password postgres DB
+//    private final String PASSWORD = "Aa@123456"; // password MySQL DB
+>>>>>>> 33eb8d3f7046fe029b62c1cb1efdadb817d245ab
 
     private static final List<Connection> availableConnections = new ArrayList<>();
     private static final List<Connection> usedConnections = new ArrayList<>();
