@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 /* package com.mehrana.test.dao;
 =======
  /* package com.mehrana.test.dao;
@@ -43,8 +43,3 @@ public abstract class GenericDao<T> {
 
 <<<<<<< HEAD
 }*/
-=======
-    public abstract void delete(Long id);
-
-}*/
->>>>>>> 33eb8d3f7046fe029b62c1cb1efdadb817d245ab
