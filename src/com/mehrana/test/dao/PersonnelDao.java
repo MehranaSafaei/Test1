@@ -13,13 +13,13 @@ import java.util.Optional;
 
 public class PersonnelDao  {
 
-    private static final String INSERT = "INSERT INTO personnels (username, mobile, personnelCode) VALUES (?, ?, ?)";
-    private static final String UPDATE = "UPDATE personnels SET username = ?, mobile = ?, personnelCode = ? WHERE id = ?";
-    private static final String DELETE = "DELETE FROM personnels WHERE id = ?";
-    private static final String SELECT_ALL = "SELECT * FROM personnels";
-    private static final String SELECT_BY_ID = "SELECT * FROM personnels WHERE id = ?";
-    private static final String SELECT_BY_USERNAME = "SELECT * FROM personnels WHERE username = ?";
-    private static final String SELECT_BY_PERSONNEL_CODE =  "SELECT * FROM personnels WHERE personnelCode = ?";
+    private static final String INSERT = "INSERT INTO personnel (username, mobile, personnelCode) VALUES (?, ?, ?)";
+    private static final String UPDATE = "UPDATE personnel SET username = ?, mobile = ?, personnelCode = ? WHERE id = ?";
+    private static final String DELETE = "DELETE FROM personnel WHERE id = ?";
+    private static final String SELECT_ALL = "SELECT * FROM personnel";
+    private static final String SELECT_BY_ID = "SELECT * FROM personnel WHERE id = ?";
+    private static final String SELECT_BY_USERNAME = "SELECT * FROM personnel WHERE username = ?";
+    private static final String SELECT_BY_PERSONNEL_CODE =  "SELECT * FROM personnel WHERE personnelCode = ?";
 //
 //    private static final String INSERT = "INSERT INTO personnel (username, mobile, personnelCode) VALUES (?, ?, ?)";
 //    private static final String UPDATE = "UPDATE personnel SET username = ?, mobile = ?, personnelCode = ? WHERE id = ?";
@@ -87,7 +87,7 @@ public class PersonnelDao  {
         return personnelList;
     }
 
-    public List<Personnel> getByName(String username) {
+    public  List<Personnel>  getByName(String username) {
         List<Personnel> personnelList = new ArrayList<>();
         try (Connection connection = SimpleConnectionPool.getConnection();
              PreparedStatement statement = connection.prepareStatement(SELECT_BY_USERNAME)) {
@@ -155,7 +155,6 @@ public class PersonnelDao  {
         return personnel; // Return the found Personnel object or null if not found
     }
 
-    // Helper method to map ResultSet to Personnel object
     private Personnel mapResultSetToPersonnel(ResultSet resultSet) throws SQLException {
         return new Personnel(
                 resultSet.getLong("id"),

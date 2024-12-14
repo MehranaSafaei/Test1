@@ -37,7 +37,11 @@ public class PersonnelService {
         personnelDao.delete(id);
     }
 
-    public List<Personnel> findPersonnelByName(String name) {
+    public  List<Personnel>  findPersonnelByName(String name) {
         return personnelDao.getByName(name);
+    }
+
+    public void deleteByPersonnelCode(long personnelCode) {
+        personnelDao.delete(personnelCode);
     }
 }

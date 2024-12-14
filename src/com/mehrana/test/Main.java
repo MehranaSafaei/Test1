@@ -9,9 +9,7 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.List;
-import java.util.Optional;
-import java.util.Scanner;
+import java.util.*;
 
 public class Main {
 
@@ -52,6 +50,9 @@ public class Main {
                         viewList(sc);
                         break;
                     case 8:
+                        viewLeaveListByUsername(sc);
+                        break;
+                    case 9:
                         System.out.println("Goodbye!");
                         sc.close();
                         running = false;
@@ -65,8 +66,9 @@ public class Main {
             e.printStackTrace();
         }
     }
-    static void sayHello(String... name){
-        for (int i=0; i<name.length; i++){
+
+    static void sayHello(String... name) {
+        for (int i = 0; i < name.length; i++) {
             System.out.println("hello" + name[i]);
         }
     }
@@ -80,7 +82,8 @@ public class Main {
         System.out.println("5) Search by Name");
         System.out.println("6)  Add Leave");
         System.out.println("7)  view List");
-        System.out.println("8) Exit");
+        System.out.println("8)  view List By username");
+        System.out.println("9) Exit");
     }
 
     public static Optional<Personnel> insert(Scanner sc) throws SQLException {
@@ -165,7 +168,7 @@ public class Main {
         System.out.print("Enter the username to search: ");
         String name = sc.nextLine();
 
-        List<Personnel> results = personnelService.findPersonnelByName(name);
+        List<Personnel> results = (List<Personnel>) personnelService.findPersonnelByName(name);
         if (results.isEmpty()) {
             System.out.println("No personnel found with the name: " + name);
         } else {
@@ -178,10 +181,9 @@ public class Main {
     }
 
     public static Optional<Leave> addLeave(Scanner sc) throws SQLException {
-        // دریافت کد پرسنلی
         System.out.print("Enter your personnelCode: ");
         long personnelCode = sc.nextLong();
-        sc.nextLine(); // مصرف newline
+        sc.nextLine();
 
         PersonnelService personnelService = new PersonnelService();
         Personnel p = personnelService.findPersonnelByCode(personnelCode);
@@ -227,7 +229,40 @@ public class Main {
         return leaveList;
     }
 
+    public static List<Leave> viewLeaveListByUsername(Scanner sc) throws SQLException {
+        List<Leave> leaveList = new ArrayList<>();
+        try {
+            LeaveService leaveService = new LeaveService();
 
+            System.out.println("Enter your username: ");
+            String username = sc.nextLine();
+
+            PersonnelService personnelService = new PersonnelService();
+            List<Personnel> personnel = personnelService.findPersonnelByName(username);
+            if (personnel.isEmpty()) {
+                System.out.println(STR."No personnel found with the username: \{username}");
+                return leaveList;
+            }
+//            if (personnel.isEmpty()) return System.out.println(STR."No personnel found with the username: \{username}"), leaveList;
+
+            Long personnelId = personnel.get(0).getId();
+            leaveList = leaveService.findLeaveByPersonnelId(personnelId);
+            if (leaveList.isEmpty()) {
+                System.out.println(STR."No leave records found for username: \{username}");
+            } else {
+                System.out.println(STR."Leave records for username: \{username}");
+                for (Leave leave : leaveList) {
+                    System.out.println(leave);
+                }
+            }
+//            System.out.println(leaveList.isEmpty() ? STR."No leave records found for username: \{username}" : STR."Leave records for username: \{username}");
+//            if (!leaveList.isEmpty()) leaveList.forEach(System.out::println);
+        } catch (SQLException e) {
+            System.err.println(STR."Error occurred while retrieving leave records: \{e.getMessage()}");
+            throw e;
+        }
+        return leaveList;
+    }
 
 }
 

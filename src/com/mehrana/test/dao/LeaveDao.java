@@ -14,19 +14,19 @@ import java.util.Optional;
 
 public class LeaveDao {
 /*انیار قرداد نقلیه */
-//
+
 //    private String INSERT = "INSERT INTO Leaves (startDate, endDate, description, personelId) VALUES (?, ?, ?, ?)";
 //    private String SELECT_BY_USERNAME = "SELECT * FROM Leaves WHERE username = ?";
 //    private static final String SELECT_ALL = "SELECT * FROM Leaves";
 //    private static final String SELECT_BY_ID = "SELECT * FROM Leaves WHERE id = ?";
 
-    private static final String INSERT = "INSERT INTO Leave (startDate, endDate, description, personnelId) VALUES (?::date, ?::date, ?, ?)";
-    private static final String UPDATE = "UPDATE leave SET startDate = ?, endDate = ?, description = ? WHERE id = ?";
-    private static final String DELETE = "DELETE FROM personnels WHERE id = ?";
-    private static final String SELECT_BY_USERNAME = "SELECT * FROM Leave WHERE username = ?";
-    private static final String SELECT_ALL = "SELECT * FROM Leave";
-    private static final String SELECT_BY_ID = "SELECT * FROM Leave WHERE id = ?";
-    private static final String SELECT_BY_PERSONNEL_ID = "SELECT * FROM leave WHERE personnelId = ?";
+    private static final String INSERT = "INSERT INTO leaves (startDate, endDate, description, personelId) VALUES (?::date, ?::date, ?, ?)";
+    private static final String UPDATE = "UPDATE leaves SET startDate = ?, endDate = ?, description = ? WHERE id = ?";
+    private static final String DELETE = "DELETE FROM leaves WHERE id = ?";
+    private static final String SELECT_BY_USERNAME = "SELECT * FROM leaves WHERE username = ?";
+    private static final String SELECT_ALL = "SELECT * FROM leaves";
+    private static final String SELECT_BY_ID = "SELECT * FROM leaves WHERE id = ?";
+    private static final String SELECT_BY_PERSONNEL_ID = "SELECT * FROM leaves WHERE personelId = ?";
 
 
     public LeaveDao() throws SQLException {
@@ -138,36 +138,60 @@ public class LeaveDao {
     }
 
 
-    public Optional<Leave> findLeaveByPersonnelCode(Long personnelCode) throws SQLException {
-        Leave leave = null;
+    public List<Leave> findLeaveByPersonnelCode(Long personnelCode) throws SQLException {
+        List<Leave> leaveList = new ArrayList<>();
 
         try (Connection connection = SimpleConnectionPool.getConnection();
              PreparedStatement statement = connection.prepareStatement(SELECT_BY_PERSONNEL_ID)) {
 
             statement.setLong(1, personnelCode);
 
-            ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-
-                leave = new Leave();
-                leave.setId((int) resultSet.getLong("id"));
-                leave.setPersonnelId(resultSet.getLong("personnelId"));
-                leave.setDescription(resultSet.getString("description"));
-                leave.setStartDate(resultSet.getDate("startDate"));
-                leave.setEndDate(resultSet.getDate("endDate"));
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    Leave leave = new Leave();
+                    leave.setId(resultSet.getInt("id"));
+                    leave.setPersonnelId(resultSet.getLong("personnelCode"));
+                    leave.setDescription(resultSet.getString("description"));
+                    leave.setStartDate(resultSet.getDate("startDate"));
+                    leave.setEndDate(resultSet.getDate("endDate"));
+                    leaveList.add(leave);
+                }
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new SQLException("Error fetching leave information for personnelId: " + personnelCode, e);
+            throw new SQLException("Error fetching leave information for personnelCode: " + personnelCode, e);
         }
 
-        return Optional.of(leave);
+        return leaveList;
     }
 
-    public Optional<Leave> findById(int id) {
-        return null;
+    public List<Leave> findLeaveByPersonnelId(Long personnelId) throws SQLException {
+        List<Leave> leaveList = new ArrayList<>();
+
+        try (Connection connection = SimpleConnectionPool.getConnection();
+             PreparedStatement statement = connection.prepareStatement(SELECT_BY_PERSONNEL_ID)) {
+
+            statement.setLong(1, personnelId);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    Leave leave = new Leave();
+                    leave.setId(resultSet.getInt("id"));
+                    leave.setPersonnelId(resultSet.getLong("personelId")); // Use personnelId instead of personnelCode
+                    leave.setDescription(resultSet.getString("description"));
+                    leave.setStartDate(resultSet.getDate("startDate"));
+                    leave.setEndDate(resultSet.getDate("endDate"));
+                    leaveList.add(leave);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new SQLException("Error fetching leave information for personnelId: " + personnelId, e);
+        }
+
+        return leaveList;
     }
+
 
     private Leave mapResultSetToPersonnel(ResultSet resultSet) throws SQLException {
         return new Leave(
@@ -175,7 +199,7 @@ public class LeaveDao {
                 resultSet.getDate("startDate"),
                 resultSet.getDate("endDate"),
                 resultSet.getString("description"),
-                resultSet.getLong("personnelId")
+                resultSet.getLong("personelId")
         );
     }
 

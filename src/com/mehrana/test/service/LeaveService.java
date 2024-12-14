@@ -22,9 +22,9 @@ public class LeaveService {
     public Optional<Leave> insert(Leave entity) throws SQLException {
         return leaveDao.insert(entity);
     }
-    public Optional<Leave> findById(int id) throws SQLException {
+ /*   public Optional<Leave> findById(int id) throws SQLException {
         return leaveDao.findById(id);
-    }
+    }*/
 
     public List<Leave> findAll() throws SQLException {
         return leaveDao.findAll();
@@ -37,6 +37,17 @@ public class LeaveService {
         leaveDao.insert(leave);
     }
 
+    public List<Leave> findLeavesByPersonnelCode(Long personnelCode) throws SQLException {
+        return leaveDao.findLeaveByPersonnelCode(personnelCode);
+    }
+
+    public List<Leave> findLeaveByUsername(String username) throws SQLException {
+        return leaveDao.getByName(username);
+    }
+
+    public List<Leave> findLeaveByPersonnelId(Long personnelId) throws SQLException {
+        return leaveDao.findLeaveByPersonnelId(personnelId);
+    }
 }
 /*
 package com.mehrana.test.service;
