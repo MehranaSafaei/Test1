@@ -5,13 +5,13 @@ import com.mehrana.test.entity.Personnel;
 import com.mehrana.test.service.LeaveService;
 import com.mehrana.test.service.PersonnelService;
 
+import java.sql.Date;
 import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.time.ZoneId;
+import java.util.List;
+import java.util.Optional;
+import java.util.Scanner;
 
 public class Main {
 
@@ -191,11 +191,9 @@ public class Main {
             return Optional.empty();
         }
 
-        // ثبت زمان ورود به سیستم (زمان دقیق وارد شدن به سیستم)
         LocalDateTime loginTime = LocalDateTime.now();
         System.out.println("Login time: " + loginTime);
 
-        // دریافت جزئیات مرخصی
         System.out.println("Enter leave details:");
         System.out.print("Enter start date (YYYY-MM-DD): ");
         String startDate = sc.nextLine();
@@ -204,13 +202,14 @@ public class Main {
         System.out.print("Enter description: ");
         String description = sc.nextLine();
 
-        // ایجاد شی مرخصی
         Leave leave = new Leave();
-        leave.setStartDate(LocalDate.parse(startDate));  // تنظیم تاریخ شروع
-        leave.setEndDate(LocalDate.parse(endDate));      // تنظیم تاریخ پایان
-        leave.setDescription(description);                // تنظیم توضیحات
-        leave.setPersonnelId(p.getId());                  // تنظیم شناسه پرسنلی
-        leave.setLoginTime(loginTime);                    // ذخیره زمان ورود به سیستم (اختیاری)
+        leave.setStartDate(Date.valueOf(startDate));
+        leave.setEndDate(Date.valueOf(endDate));
+//        leave.setStartDate(Date.from(loginTime.atZone(ZoneId.systemDefault()).toInstant()));
+//        leave.setEndDate(Date.from(loginTime.atZone(ZoneId.systemDefault()).toInstant()));
+        leave.setDescription(description);
+        leave.setPersonnelId(p.getId());
+        leave.setLoginTime(loginTime);
 
         LeaveService leaveService = new LeaveService();
         System.out.println("Your information has been saved: " + startDate + " - " + endDate + " - " + description + " - " + personnelCode);
@@ -517,21 +516,21 @@ public class Main {
         return Optional.of(updatedLeave);*//*
 
 =======
-        return Optional.of(updatedLeave);*/
->>>>>>> 33eb8d3f7046fe029b62c1cb1efdadb817d245ab
-        System.out.print("Enter your ID: ");
-
-
-    }
-
-
-}
-<<<<<<< HEAD
-*/
-
-
-
-
-=======
->>>>>>> 33eb8d3f7046fe029b62c1cb1efdadb817d245ab
+//        return Optional.of(updatedLeave);*/
+//>>>>>>> 33eb8d3f7046fe029b62c1cb1efdadb817d245ab
+//        System.out.print("Enter your ID: ");
+//
+//        return null;
+//    }
+//
+//
+//}
+//<<<<<<< HEAD
+//*/
+//
+//
+//
+//
+//=======
+//>>>>>>> 33eb8d3f7046fe029b62c1cb1efdadb817d245ab
 

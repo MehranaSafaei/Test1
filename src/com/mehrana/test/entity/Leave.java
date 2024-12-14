@@ -1,25 +1,32 @@
 package com.mehrana.test.entity;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Objects;
 
 public class Leave {
     private long id;
-    private LocalDate startDate;
-    private LocalDate endDate;
+    private Date startDate;
+    private Date endDate;
     private String description;
     private Long personnelId;
     private LocalDateTime loginTime;  // اضافه کردن فیلد زمان ورود به سیستم
 
-<<<<<<< HEAD
+    public Leave() {
+        super();
+
+    }
+
+    public Leave(long id, Date startDate, Date endDate, String description, Long personnelId) {
+        this.id = id;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.description = description;
+        this.personnelId = personnelId;
+//        this.loginTime = loginTime;
+    }
+
     public long getId() {
-=======
-    private Personnel personnel;
-
-
-    public int getId() {
->>>>>>> 33eb8d3f7046fe029b62c1cb1efdadb817d245ab
         return id;
     }
 
@@ -27,19 +34,19 @@ public class Leave {
         this.id = id;
     }
 
-    public LocalDate getStartDate() {
+    public Date getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(LocalDate startDate) {
+    public void setStartDate(Date startDate) {
         this.startDate = startDate;
     }
 
-    public LocalDate getEndDate() {
+    public Date getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(LocalDate endDate) {
+    public void setEndDate(Date endDate) {
         this.endDate = endDate;
     }
 
@@ -71,27 +78,23 @@ public class Leave {
     public String toString() {
         return "Leave{" +
                 "id=" + id +
-                ", description='" + description + '\'' +
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +
+                ", description='" + description + '\'' +
                 ", personnelId=" + personnelId +
+                ", loginTime=" + loginTime +
                 '}';
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Leave leave = (Leave) o;
-        return id == leave.id &&
-                Objects.equals(description, leave.description) &&
-                Objects.equals(startDate, leave.startDate) &&
-                Objects.equals(endDate, leave.endDate) &&
-                Objects.equals(personnelId, leave.personnelId);
+        return id == leave.id && Objects.equals(startDate, leave.startDate) && Objects.equals(endDate, leave.endDate) && Objects.equals(description, leave.description) && Objects.equals(personnelId, leave.personnelId) && Objects.equals(loginTime, leave.loginTime);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, description, startDate, endDate, personnelId);
+        return Objects.hash(id, startDate, endDate, description, personnelId, loginTime);
     }
 }
