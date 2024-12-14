@@ -3,18 +3,15 @@ package com.mehrana.test.dao;
 import com.mehrana.test.connection.SimpleConnectionPool;
 import com.mehrana.test.entity.Personnel;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 public class PersonnelDao  {
 
-    private static final String INSERT = "INSERT INTO personnel (username, mobile, personnelCode) VALUES (?, ?, ?)";
-    private static final String UPDATE = "UPDATE personnel SET username = ?, mobile = ?, personnelCode = ? WHERE id = ?";
+    private static final String INSERT = "INSERT INTO personnel (username, mobile, personnelCode, email) VALUES (?, ?, ?, ?)";
+    private static final String UPDATE = "UPDATE personnel SET username = ?, mobile = ?, personnelCode = ?, email = ? WHERE id = ?";
     private static final String DELETE = "DELETE FROM personnel WHERE id = ?";
     private static final String SELECT_ALL = "SELECT * FROM personnel";
     private static final String SELECT_BY_ID = "SELECT * FROM personnel WHERE id = ?";
@@ -39,10 +36,11 @@ public class PersonnelDao  {
 
     public Optional<Personnel> insert(Personnel entity) throws SQLException {
         try (Connection connection = SimpleConnectionPool.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(INSERT)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, entity.getUserName());
             preparedStatement.setString(2, entity.getMobile());
             preparedStatement.setLong(3, entity.getPersonnelCode());
+            preparedStatement.setString(4,entity.getEmail());
             preparedStatement.executeUpdate();
             ResultSet rs = preparedStatement.getGeneratedKeys();
             while (rs.next()) {
@@ -112,7 +110,8 @@ public class PersonnelDao  {
             statement.setString(1, entity.getUserName());
             statement.setString(2, entity.getMobile());
             statement.setLong(3, entity.getPersonnelCode());
-            statement.setLong(4, entity.getId());
+            statement.setString(4,entity.getEmail());
+            statement.setLong(5, entity.getId());
 
             int affectedRows = statement.executeUpdate();
             if (affectedRows > 0) {
@@ -160,7 +159,8 @@ public class PersonnelDao  {
                 resultSet.getLong("id"),
                 resultSet.getString("username"),
                 resultSet.getString("mobile"),
-                resultSet.getLong("PersonnelCode")
+                resultSet.getLong("PersonnelCode"),
+                resultSet.getString("email")
         );
     }
 

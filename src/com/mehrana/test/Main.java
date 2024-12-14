@@ -76,13 +76,13 @@ public class Main {
     public static void menu() {
         System.out.println("*** Menu ***");
         System.out.println("1) Add");
-        System.out.println("2) Read");
-        System.out.println("3) Update");
-        System.out.println("4) Remove");
+        System.out.println("2) Select Personnel List");
+        System.out.println("3) Update Personnel");
+        System.out.println("4) Remove Personnel");
         System.out.println("5) Search by Name");
-        System.out.println("6)  Add Leave");
-        System.out.println("7)  view List");
-        System.out.println("8)  view List By username");
+        System.out.println("6) Add Leave");
+        System.out.println("7) view Leave List");
+        System.out.println("8) view List By username");
         System.out.println("9) Exit");
     }
 
@@ -96,12 +96,14 @@ public class Main {
         System.out.print("Enter your personnel code: ");
         int personnelCode = sc.nextInt();
         sc.nextLine();
+        System.out.print("Enter your email: ");
+        String email = sc.next();
 
         Personnel personnel = new Personnel();
         personnel.setUserName(userName);
         personnel.setMobile(mobile);
         personnel.setPersonnelCode((long) personnelCode);
-        System.out.println("Your information has been saved: " + userName + " - " + mobile + " - " + personnelCode);
+        System.out.println("Your information has been saved: " + userName + " - " + mobile + " - " + personnelCode + " - " + email);
         return personnelService.insert(personnel);
     }
 
@@ -133,8 +135,11 @@ public class Main {
         String userName = sc.nextLine();
         System.out.print("Enter your mobile number: ");
         String mobile = sc.nextLine();
+        System.out.println("enter your email: ");
+        String email = sc.next();
         existingPersonnel.setUserName(userName);
         existingPersonnel.setMobile(mobile);
+        existingPersonnel.setEmail(email);
 
         Personnel updatedPersonnel = personnelService.updatePersonnel(existingPersonnel);
         if (updatedPersonnel != null) {
@@ -172,10 +177,8 @@ public class Main {
         if (results.isEmpty()) {
             System.out.println("No personnel found with the name: " + name);
         } else {
-            System.out.println("    Username | Mobile | Personnel Code");
-            System.out.println("--------------------------------------");
             for (Personnel personnel : results) {
-                System.out.println(personnel.getUserName().trim() + " - " + personnel.getMobile() + " - " + personnel.getPersonnelCode());
+                System.out.println("Personnel : " + personnel.getUserName().trim() + " - " + personnel.getMobile() + " - " + personnel.getPersonnelCode());
             }
         }
     }

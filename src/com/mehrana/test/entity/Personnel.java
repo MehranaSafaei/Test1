@@ -6,18 +6,19 @@ public class Personnel {
     private Long id;
     private String userName;
     private String mobile;
-    private Long PersonnelCode;
+    private Long personnelCode;
+    private String email;
 
     public Personnel() {
     }
 
-    public Personnel(Long id, String userName, String mobile, Long personnelCode) {
+    public Personnel(Long id, String userName, String mobile, Long personnelCode, String email) {
         this.id = id;
         this.userName = userName;
         this.mobile = mobile;
-        PersonnelCode = personnelCode;
+        this.personnelCode = personnelCode;
+        this.email = email;
     }
-
 
     public Long getId() {
         return id;
@@ -44,11 +45,19 @@ public class Personnel {
     }
 
     public Long getPersonnelCode() {
-        return PersonnelCode;
+        return personnelCode;
     }
 
     public void setPersonnelCode(Long personnelCode) {
-        PersonnelCode = personnelCode;
+        this.personnelCode = personnelCode;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     @Override
@@ -57,7 +66,8 @@ public class Personnel {
                 "id=" + id +
                 ", userName='" + userName + '\'' +
                 ", mobile='" + mobile + '\'' +
-                ", PersonnelCode=" + PersonnelCode +
+                ", personnelCode=" + personnelCode + '\'' +
+                ", email='" + email +
                 '}';
     }
 
@@ -66,11 +76,11 @@ public class Personnel {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Personnel personnel = (Personnel) o;
-        return Objects.equals(id, personnel.id) && Objects.equals(userName, personnel.userName) && Objects.equals(mobile, personnel.mobile) && Objects.equals(PersonnelCode, personnel.PersonnelCode);
+        return Objects.equals(id, personnel.id) && Objects.equals(userName, personnel.userName) && Objects.equals(mobile, personnel.mobile) && Objects.equals(personnelCode, personnel.personnelCode) && Objects.equals(email, personnel.email);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, userName, mobile, PersonnelCode);
+        return Objects.hash(id, userName, mobile, personnelCode, email);
     }
 }
